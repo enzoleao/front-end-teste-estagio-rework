@@ -6,8 +6,8 @@ export function Header() {
     return (
         <div className={styles.headerWrapper}>
             <div>
-                <button onClick={()=>setComponentToShowHome(true)}>HOME</button>
-                <button onClick={()=>setComponentToShowHome(false)}>CADASTRAR EMPRESA</button>
+                <button onClick={()=>setComponentToShowHome(true)}>Home</button>
+                <button onClick={()=>setComponentToShowHome(false)}>Cadastro de Empresa</button>
             </div>
         </div>
     )
