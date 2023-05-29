@@ -14,10 +14,10 @@ export function RegisterCompany() {
     successAlert,
     contextHolder,
   } = useAllContexts()
-  const [sectorsSelected, setSectorsSelected] = useState<any>()
-  const [inputError, setInputError] = useState('')
+  const [sectorsSelected, setSectorsSelected] = useState<any>([])
+  const [inputError, setInputError] = useState<any>()
   const createCompany = async (data: any) => {
-    setInputError('')
+    setInputError([])
     try {
       const response = await api.post('/companies', data)
       setAllCompanies([
@@ -35,9 +35,15 @@ export function RegisterCompany() {
       setSectorsSelected([])
       form.resetFields()
     } catch (error: any) {
-      successAlert({ content: error.response.data.error, type: 'error' })
+      console.log(error)
+      error.response.data.error.map((i: any) => {
+        return successAlert({ content: i, type: 'error' })
+      })
       setInputError(error.response.data.error)
     }
+  }
+  const inputsAlerts = (strings: any) => {
+    return inputError?.some((elemento: any) => strings?.includes(elemento))
   }
   return (
     <div className={styles.registerCompanyContainer}>
@@ -50,7 +56,7 @@ export function RegisterCompany() {
         >
           <Form.Item
             validateStatus={
-              inputError === 'Por favor, preencha o campo Nome da Empresa.'
+              inputsAlerts(['Por favor, preencha o campo Nome da Empresa.'])
                 ? 'error'
                 : undefined
             }
@@ -66,9 +72,10 @@ export function RegisterCompany() {
           </Form.Item>
           <Form.Item
             validateStatus={
-              inputError === 'Por favor, preencha o campo CNPJ.' ||
-              inputError === 'Por favor, insira um CNPJ válido.' ||
-              inputError === 'Já existe uma empresa cadastrada com esse CNPJ.'
+              inputsAlerts([
+                'Por favor, preencha o campo CNPJ.',
+                'Por favor, insira um CNPJ válido.',
+              ])
                 ? 'error'
                 : undefined
             }
@@ -90,7 +97,7 @@ export function RegisterCompany() {
           </Form.Item>
           <Form.Item
             validateStatus={
-              inputError === 'Por favor, selecione os Setores.'
+              inputsAlerts(['Por favor, selecione os Setores.'])
                 ? 'error'
                 : undefined
             }
