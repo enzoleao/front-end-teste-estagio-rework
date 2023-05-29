@@ -87,14 +87,17 @@ export function HomeTable() {
     setSearchMode(data)
   }
   const searchCompany = async () => {
-    setOrderPages(false)
     if (searchMode === 'Empresa' || companyName === '') {
-      const response = await api.get(`/companies/${companyName}`)
+      const response = await api.get(
+        `/companies/${companyName}?order=${orderPages}`,
+      )
       companyName === ''
         ? setAllCompanies(response.data.companies.data)
         : setAllCompanies(response.data.companies)
     } else {
-      const response = await api.get(`/search/${companyName}`)
+      const response = await api.get(
+        `/search/${companyName}?order=${orderPages}`,
+      )
       setAllCompanies(response.data.companies)
     }
     setPageToShowOnTable(1)

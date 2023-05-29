@@ -9,6 +9,7 @@ export function EditModal(props: any) {
   const { allSectors, setAllCompanies, allCompanies, successAlert } =
     useAllContexts()
   const [sectorsSelected, setSectorsSelected] = useState<any>()
+  const [inputsError, setInputsError] = useState<any>()
   const handleCancel = () => {
     form.resetFields()
     props.setIsModalOpen(false)
@@ -18,6 +19,7 @@ export function EditModal(props: any) {
   }, [props.rowData, form, allCompanies])
 
   const handleEditCompany = async (data: any) => {
+    setInputsError('')
     try {
       await api.put(`/companies/${props.rowData.id}`, data)
       const indice = allCompanies.findIndex(
@@ -39,9 +41,14 @@ export function EditModal(props: any) {
       props.setIsModalOpen(false)
       successAlert({ content: 'Atualizado com sucesso', type: 'success' })
     } catch (err: any) {
-      successAlert({ content: err.response.data.error, type: 'error' })
-      console.log(err)
+      setInputsError(err.response.data.error)
+      err.response.data.error.map((i: any) => {
+        return successAlert({ content: i, type: 'error' })
+      })
     }
+  }
+  const inputsAlerts = (strings: any) => {
+    return inputsError?.some((elemento: any) => strings?.includes(elemento))
   }
   return (
     <Modal
@@ -60,10 +67,28 @@ export function EditModal(props: any) {
           name="name"
           label="Nome da Empresa"
           tooltip="Este campo é obrigatório"
+          validateStatus={
+            inputsAlerts('Por favor, preencha o campo Nome da Empresa.')
+              ? 'error'
+              : undefined
+          }
         >
           <Input autoComplete="off" size="large" />
         </Form.Item>
-        <Form.Item name="cnpj" label="CNPJ" tooltip="Este campo é obrigatório">
+        <Form.Item
+          validateStatus={
+            inputsAlerts([
+              'Por favor, preencha o campo CNPJ.',
+              'Por favor, insira um CNPJ válido.',
+              'Já existe uma empresa cadastrada com esse CNPJ.',
+            ])
+              ? 'error'
+              : undefined
+          }
+          name="cnpj"
+          label="CNPJ"
+          tooltip="Este campo é obrigatório"
+        >
           <InputMask mask="99.999.999/9999-99" maskChar="">
             {/* @ts-ignore: Unreachable code error */}
             {(inputProps: any) => <Input autoComplete="off" size="large" />}
@@ -73,6 +98,11 @@ export function EditModal(props: any) {
           label="Setores"
           tooltip="Este campo é obrigatório"
           name="sectors"
+          validateStatus={
+            inputsAlerts('Por favor, selecione os Setores.')
+              ? 'error'
+              : undefined
+          }
         >
           <Select
             mode="multiple"

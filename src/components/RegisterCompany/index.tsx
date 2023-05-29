@@ -75,6 +75,7 @@ export function RegisterCompany() {
               inputsAlerts([
                 'Por favor, preencha o campo CNPJ.',
                 'Por favor, insira um CNPJ válido.',
+                'Já existe uma empresa cadastrada com esse CNPJ.',
               ])
                 ? 'error'
                 : undefined
