@@ -77,6 +77,7 @@ export function HomeTable() {
     setIsEditModalOpen(true)
   }
   const orderResults = async () => {
+    setCompanyName('')
     setOrderPages(!orderPages)
     const response = await api.get(
       `/companies?page=${pageToShowOnTable}&order=${!orderPages}`,
@@ -232,6 +233,7 @@ export function HomeTable() {
               />
               <Input
                 size="large"
+                value={companyName}
                 onChange={(e) => setCompanyName(e.target.value)}
                 placeholder={`Pesquisar por ${searchMode}`}
               />
