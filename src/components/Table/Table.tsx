@@ -85,6 +85,7 @@ export function HomeTable() {
     setAllCompanies(response.data.companies.data)
   }
   const handleChangeSearchMode = (data: any) => {
+    setCompanyName('')
     setSearchMode(data)
   }
   const searchCompany = async () => {
