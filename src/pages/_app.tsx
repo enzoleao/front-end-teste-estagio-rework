@@ -4,8 +4,8 @@ import type { AppProps } from 'next/app'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-  <ContextsProvider>
-    <Component {...pageProps} />
-  </ContextsProvider>
+    <ContextsProvider>
+      <Component {...pageProps} />
+    </ContextsProvider>
   )
 }

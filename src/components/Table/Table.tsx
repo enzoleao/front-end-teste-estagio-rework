@@ -1,4 +1,5 @@
 import api from '@/service/api'
+import styles from './Table.module.scss'
 import { useEffect, useState } from 'react'
 import {
   Space,
@@ -12,7 +13,6 @@ import {
   Modal,
 } from 'antd'
 import { BiEdit } from 'react-icons/bi'
-import styles from './Table.module.scss'
 import { useAllContexts } from '@/contexts/useContexts'
 import { EditModal } from '../Modals'
 import {
@@ -28,13 +28,16 @@ const { confirm } = Modal
 type MenuItem = Required<MenuProps>['items'][number]
 
 interface DataType {
+  // eslint-disable-next-line no-undef
   id: React.Key
   name: string
   cnpj: any
   sectors: any[]
 }
 function getItem(
+  // eslint-disable-next-line no-undef
   label: React.ReactNode,
+  // eslint-disable-next-line no-undef
   key: React.Key,
   children?: MenuItem[],
   type?: 'group',
@@ -210,6 +213,7 @@ export function HomeTable() {
     searchCompany()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [companyName])
+
   return (
     <div className={styles.homeTableWrapper}>
       <div className={styles.homeTableContainer}>
