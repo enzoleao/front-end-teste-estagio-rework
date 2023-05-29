@@ -117,13 +117,13 @@ export function HomeTable() {
     {
       title: 'Nome',
       dataIndex: 'name',
-      key: 'name',
+      key: 'id',
       width: '450px',
     },
     {
       title: 'CNPJ',
       dataIndex: 'cnpj',
-      key: 'cnpj',
+      key: 'id',
     },
     {
       title: 'Setores',
@@ -135,12 +135,13 @@ export function HomeTable() {
             'VISUALIZAR',
             'sub4',
             sectors.map((i: any) => {
-              return getItem(`${i.name}`, `${i.name}`)
+              return getItem(`${i.name}`, `${i.id}`)
             }),
           ),
         ]
         return (
           <Menu
+            className={styles.selectEditUl}
             style={{ width: 256, border: 'none', background: 'none' }}
             mode="inline"
             selectable={false}
@@ -155,11 +156,11 @@ export function HomeTable() {
       render: (record: DataType) => (
         <Space size="middle">
           <BiEdit
-            className="h-5 w-5 cursor-pointer"
+            className="h-5 w-5 cursor-pointer hover:text-orange-300"
             onClick={() => showModal(record)}
           />
           <BsTrash
-            className="h-5 w-5 cursor-pointer"
+            className="h-5 w-5 cursor-pointer hover:text-red-500"
             onClick={() => handleDeleteCompany(record)}
           />
         </Space>
@@ -221,6 +222,7 @@ export function HomeTable() {
           <div>
             <Space.Compact size="large" style={{ width: '100%' }}>
               <Select
+                style={{ minWidth: '120px' }}
                 onChange={handleChangeSearchMode}
                 defaultValue="Empresa"
                 options={searchOptions}
@@ -262,6 +264,7 @@ export function HomeTable() {
         <main>
           <div className={styles.tableWrapperOverFlow}>
             <Table
+              rowKey="id"
               style={{ width: '100%' }}
               dataSource={allCompanies}
               pagination={false}
