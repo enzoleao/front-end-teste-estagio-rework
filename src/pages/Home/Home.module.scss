@@ -1,0 +1,11 @@
+.homeWrapper {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    .homeContainer {
+        width: 100%;
+        height: 100%;
+        max-width: 1120px;
+    }
+}
