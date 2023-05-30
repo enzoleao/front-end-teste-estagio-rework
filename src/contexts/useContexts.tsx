@@ -37,7 +37,7 @@ export function ContextsProvider({ children }: any) {
   useEffect(() => {
     const getAllCompanies = async () => {
       try {
-        const response = await api.get(`/companies?order=${orderPages}`)
+        const response = await api.get(`/companies?page=${pageToShowOnTable}&order=${orderPages}`)
         setAllCompanies(response.data.companies.data)
         setPageToShowOnTable(response.data.companies.current_page)
         setMaxPage(response.data.companies.last_page)

@@ -161,11 +161,11 @@ export function HomeTable() {
       render: (record: DataType) => (
         <Space size="middle">
           <BiEdit
-            className="h-5 w-5 cursor-pointer hover:text-orange-300"
+            className="h-5 w-5 cursor-pointer text-blue-700 hover:text-blue-800"
             onClick={() => showModal(record)}
           />
           <BsTrash
-            className="h-5 w-5 cursor-pointer hover:text-red-500"
+            className="h-5 w-5 cursor-pointer text-red-500 hover:text-red-600"
             onClick={() => handleDeleteCompany(record)}
           />
         </Space>
@@ -262,7 +262,7 @@ export function HomeTable() {
                   backgroundColor: '#fff',
                 }}
               >
-                <FilterOutlined />
+                <FilterOutlined className="text-blue-700" />
               </Button>
             </Dropdown>
           </div>

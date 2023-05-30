@@ -19,7 +19,7 @@ export function EditModal(props: any) {
   }, [props.rowData, form, allCompanies])
 
   const handleEditCompany = async (data: any) => {
-    setInputsError('')
+    setInputsError([])
     try {
       await api.put(`/companies/${props.rowData.id}`, data)
       const indice = allCompanies.findIndex(
@@ -41,6 +41,7 @@ export function EditModal(props: any) {
       props.setIsModalOpen(false)
       successAlert({ content: 'Atualizado com sucesso', type: 'success' })
     } catch (err: any) {
+      console.log(err)
       setInputsError(err.response.data.error)
       err.response.data.error.map((i: any) => {
         return successAlert({ content: i, type: 'error' })
@@ -127,7 +128,7 @@ export function EditModal(props: any) {
           />
         </Form.Item>
         <Form.Item style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button size="large" htmlType="submit">
+          <Button style={{color: '#008000', borderColor: '#008000'}} size="large" htmlType="submit">
             SALVAR
           </Button>
         </Form.Item>
