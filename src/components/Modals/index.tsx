@@ -3,7 +3,7 @@ import InputMask from 'react-input-mask'
 import { useEffect, useState } from 'react'
 import { useAllContexts } from '@/contexts/useContexts'
 import { Button, Form, Input, Modal, Select } from 'antd'
-
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 export function EditModal(props: any) {
   const [form] = Form.useForm()
   const { allSectors, setAllCompanies, allCompanies, successAlert } =
@@ -74,7 +74,15 @@ export function EditModal(props: any) {
               : undefined
           }
         >
-          <Input autoComplete="off" size="large" />
+          <Input
+            suffix={
+              inputsAlerts('Por favor, preencha o campo Nome da Empresa.') ? (
+                <ExclamationCircleOutlined />
+              ) : undefined
+            }
+            autoComplete="off"
+            size="large"
+          />
         </Form.Item>
         <Form.Item
           validateStatus={
@@ -92,7 +100,21 @@ export function EditModal(props: any) {
         >
           <InputMask mask="99.999.999/9999-99" maskChar="">
             {/* @ts-ignore: Unreachable code error */}
-            {(inputProps: any) => <Input autoComplete="off" size="large" />}
+            {(inputProps: any) => (
+              <Input
+                suffix={
+                  inputsAlerts([
+                    'Por favor, preencha o campo CNPJ.',
+                    'Por favor, insira um CNPJ válido.',
+                    'Já existe uma empresa cadastrada com esse CNPJ.',
+                  ]) ? (
+                    <ExclamationCircleOutlined />
+                  ) : undefined
+                }
+                autoComplete="off"
+                size="large"
+              />
+            )}
           </InputMask>
         </Form.Item>
         <Form.Item
@@ -109,12 +131,16 @@ export function EditModal(props: any) {
             mode="multiple"
             placeholder="Setores"
             value={sectorsSelected}
-            defaultValue={props.rowData?.sectors.map(({ id }: any) => id)}
             onChange={setSectorsSelected}
             style={{
               width: '100%',
               zIndex: 9999,
             }}
+            suffixIcon={
+              inputsAlerts('Por favor, selecione os Setores.') ? (
+                <ExclamationCircleOutlined className="text-red-600" />
+              ) : undefined
+            }
             options={
               typeof allSectors !== 'undefined' &&
               allSectors.map((item: any) => ({
@@ -128,7 +154,11 @@ export function EditModal(props: any) {
           />
         </Form.Item>
         <Form.Item style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button style={{color: '#008000', borderColor: '#008000'}} size="large" htmlType="submit">
+          <Button
+            style={{ color: '#008000', borderColor: '#008000' }}
+            size="large"
+            htmlType="submit"
+          >
             SALVAR
           </Button>
         </Form.Item>

@@ -16,6 +16,8 @@ type ContextsTypes = {
   maxPage: number
   setComponentToShowHome: any
   componentToShowHome: boolean
+  setMaxPage: any
+  isLoading: boolean
 }
 
 export const AllContexts = createContext({} as ContextsTypes)
@@ -28,6 +30,7 @@ export function ContextsProvider({ children }: any) {
   const [pageToShowOnTable, setPageToShowOnTable] = useState(1)
   const [maxPage, setMaxPage] = useState(1)
   const [componentToShowHome, setComponentToShowHome] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
   const successAlert = (data: any) => {
     messageApi.open({
       type: data.type,
@@ -37,7 +40,9 @@ export function ContextsProvider({ children }: any) {
   useEffect(() => {
     const getAllCompanies = async () => {
       try {
-        const response = await api.get(`/companies?page=${pageToShowOnTable}&order=${orderPages}`)
+        const response = await api.get(
+          `/companies?page=${pageToShowOnTable}&order=${orderPages}`,
+        )
         setAllCompanies(response.data.companies.data)
         setPageToShowOnTable(response.data.companies.current_page)
         setMaxPage(response.data.companies.last_page)
@@ -55,6 +60,7 @@ export function ContextsProvider({ children }: any) {
     }
     getAllSectors()
     getAllCompanies()
+    setIsLoading(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   return (
@@ -73,6 +79,8 @@ export function ContextsProvider({ children }: any) {
         setComponentToShowHome,
         componentToShowHome,
         maxPage,
+        setMaxPage,
+        isLoading,
       }}
     >
       {children}

@@ -4,6 +4,7 @@ import api from '@/service/api'
 import { useAllContexts } from '@/contexts/useContexts'
 import { Button, Form, Input, Select } from 'antd'
 import { useState } from 'react'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 
 export function RegisterCompany() {
   const [form] = Form.useForm()
@@ -13,6 +14,9 @@ export function RegisterCompany() {
     allCompanies,
     successAlert,
     contextHolder,
+    setMaxPage,
+    maxPage,
+    pageToShowOnTable,
   } = useAllContexts()
   const [sectorsSelected, setSectorsSelected] = useState<any>([])
   const [inputError, setInputError] = useState<any>()
@@ -34,8 +38,11 @@ export function RegisterCompany() {
       successAlert({ content: response.data.message, type: 'success' })
       setSectorsSelected([])
       form.resetFields()
+      // eslint-disable-next-line no-unused-expressions
+      allCompanies.length === 10 && pageToShowOnTable === maxPage
+        ? setMaxPage(maxPage + 1)
+        : false
     } catch (error: any) {
-      console.log(error)
       error.response.data.error.map((i: any) => {
         return successAlert({ content: i, type: 'error' })
       })
@@ -68,6 +75,13 @@ export function RegisterCompany() {
               placeholder="Nome da Empresa"
               autoComplete="off"
               size="large"
+              suffix={
+                inputsAlerts([
+                  'Por favor, preencha o campo Nome da Empresa.',
+                ]) ? (
+                  <ExclamationCircleOutlined />
+                ) : undefined
+              }
             />
           </Form.Item>
           <Form.Item
@@ -92,6 +106,15 @@ export function RegisterCompany() {
                   placeholder="CNPJ"
                   autoComplete="off"
                   size="large"
+                  suffix={
+                    inputsAlerts([
+                      'Por favor, preencha o campo CNPJ.',
+                      'Por favor, insira um CNPJ válido.',
+                      'Já existe uma empresa cadastrada com esse CNPJ.',
+                    ]) ? (
+                      <ExclamationCircleOutlined />
+                    ) : undefined
+                  }
                 />
               )}
             </InputMask>
@@ -107,6 +130,11 @@ export function RegisterCompany() {
             name="sectors"
           >
             <Select
+              suffixIcon={
+                inputsAlerts(['Por favor, selecione os Setores.']) ? (
+                  <ExclamationCircleOutlined className="text-red-600" />
+                ) : undefined
+              }
               mode="multiple"
               placeholder="Setores"
               value={sectorsSelected}

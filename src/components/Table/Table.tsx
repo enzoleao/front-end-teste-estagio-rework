@@ -8,9 +8,11 @@ import {
   Input,
   Button,
   Select,
-  Dropdown,
   Switch,
   Modal,
+  Empty,
+  ConfigProvider,
+  Popover,
 } from 'antd'
 import { BiEdit } from 'react-icons/bi'
 import { useAllContexts } from '@/contexts/useContexts'
@@ -41,12 +43,14 @@ function getItem(
   key: React.Key,
   children?: MenuItem[],
   type?: 'group',
+  click?: any,
 ): MenuItem {
   return {
     key,
     children,
     label,
     type,
+    click,
   } as MenuItem
 }
 export function HomeTable() {
@@ -62,6 +66,7 @@ export function HomeTable() {
     setPageToShowOnTable,
     maxPage,
     successAlert,
+    setMaxPage,
   } = useAllContexts()
   const [searchMode, setSearchMode] = useState('Empresa')
   const [companyName, setCompanyName] = useState('')
@@ -118,6 +123,43 @@ export function HomeTable() {
     )
     setAllCompanies(response.data.companies.data)
   }
+  const handleDeleteCompany = (data: DataType) => {
+    confirm({
+      title: 'Você tem certeza que deseja deletar essa empresa?',
+      icon: <ExclamationCircleOutlined className="text-red-600" />,
+      content: `${data.name}`,
+      okText: 'DELETAR',
+      okType: 'danger',
+      cancelText: 'CANCELAR',
+      async onOk() {
+        try {
+          await api.delete(`/companies/${data.id}`)
+          successAlert({ content: 'Deletado com sucesso', type: 'success' })
+          if (
+            pageToShowOnTable === maxPage &&
+            allCompanies.length === 1 &&
+            pageToShowOnTable > 1
+          ) {
+            const response = await api.get(
+              `/companies?page=${pageToShowOnTable - 1}&order=${orderPages}`,
+            )
+            setPageToShowOnTable(pageToShowOnTable - 1)
+            setAllCompanies(response.data.companies.data)
+            setMaxPage(pageToShowOnTable - 1)
+          } else {
+            setAllCompanies(
+              allCompanies.filter((obj: any) => obj.id !== data.id),
+            )
+          }
+        } catch (err) {
+          console.log(err)
+        }
+      },
+      onCancel() {
+        console.log(data)
+      },
+    })
+  }
   const columns = [
     {
       title: 'Nome',
@@ -172,17 +214,7 @@ export function HomeTable() {
       ),
     },
   ]
-  const items: MenuProps['items'] = [
-    {
-      key: '1',
-      label: (
-        <p>
-          Ordem alfabetica{' '}
-          <Switch checked={orderPages} onChange={orderResults} />
-        </p>
-      ),
-    },
-  ]
+
   const searchOptions = [
     {
       value: 'Empresa',
@@ -193,33 +225,32 @@ export function HomeTable() {
       label: 'Setores',
     },
   ]
-  const handleDeleteCompany = (data: DataType) => {
-    confirm({
-      title: 'Você tem certeza que deseja deletar essa empresa?',
-      icon: <ExclamationCircleOutlined className="text-red-600" />,
-      content: `${data.name}`,
-      okText: 'DELETAR',
-      okType: 'danger',
-      cancelText: 'CANCELAR',
-      async onOk() {
-        try {
-          await api.delete(`/companies/${data.id}`)
-          setAllCompanies(allCompanies.filter((obj: any) => obj.id !== data.id))
-          successAlert({ content: 'Deletado com sucesso', type: 'success' })
-        } catch (err) {
-          console.log(err)
-        }
-      },
-      onCancel() {
-        console.log(data)
-      },
-    })
-  }
+
   useEffect(() => {
     searchCompany()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [companyName])
-
+  const customizeRenderEmpty = () => (
+    <div
+      style={{
+        textAlign: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+      }}
+    >
+      {Empty.PRESENTED_IMAGE_SIMPLE}
+      <p>Nenhuma empresa {companyName !== '' ? 'localizada' : 'cadastrada'}</p>
+    </div>
+  )
+  const content = (
+    <div>
+      <p>
+        Ordem alfabetica <Switch checked={orderPages} onChange={orderResults} />
+      </p>
+    </div>
+  )
   return (
     <div className={styles.homeTableWrapper}>
       <div className={styles.homeTableContainer}>
@@ -252,7 +283,7 @@ export function HomeTable() {
             </Space.Compact>
           </div>
           <div>
-            <Dropdown menu={{ items }} placement="bottomLeft" arrow>
+            <Popover placement="bottom" content={content}>
               <Button
                 style={{
                   marginRight: '40px',
@@ -264,18 +295,20 @@ export function HomeTable() {
               >
                 <FilterOutlined className="text-blue-700" />
               </Button>
-            </Dropdown>
+            </Popover>
           </div>
         </header>
         <main>
           <div className={styles.tableWrapperOverFlow}>
-            <Table
-              rowKey="id"
-              style={{ width: '100%' }}
-              dataSource={allCompanies}
-              pagination={false}
-              columns={columns}
-            />
+            <ConfigProvider renderEmpty={customizeRenderEmpty}>
+              <Table
+                rowKey="id"
+                style={{ width: '100%' }}
+                dataSource={allCompanies}
+                pagination={false}
+                columns={columns}
+              />
+            </ConfigProvider>
           </div>
           <footer>
             <Button
