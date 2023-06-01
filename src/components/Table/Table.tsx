@@ -244,7 +244,7 @@ export function HomeTable() {
       <p>Nenhuma empresa {companyName !== '' ? 'localizada' : 'cadastrada'}</p>
     </div>
   )
-  const content = (
+  const filterItems = (
     <div>
       <p>
         Ordem alfabetica <Switch checked={orderPages} onChange={orderResults} />
@@ -283,7 +283,7 @@ export function HomeTable() {
             </Space.Compact>
           </div>
           <div>
-            <Popover placement="bottom" content={content}>
+            <Popover placement="bottom" content={filterItems}>
               <Button
                 style={{
                   marginRight: '40px',
