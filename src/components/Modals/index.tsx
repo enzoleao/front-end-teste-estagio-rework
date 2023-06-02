@@ -13,6 +13,7 @@ export function EditModal(props: any) {
   const handleCancel = () => {
     form.resetFields()
     props.setIsModalOpen(false)
+    setInputsError([])
   }
   useEffect(() => {
     form.setFieldsValue(props.rowData)
@@ -57,6 +58,7 @@ export function EditModal(props: any) {
       footer={null}
       open={props.isModalOpen}
       onCancel={handleCancel}
+      afterClose={handleCancel}
     >
       <Form
         onFinish={handleEditCompany}
@@ -71,6 +73,11 @@ export function EditModal(props: any) {
           validateStatus={
             inputsAlerts('Por favor, preencha o campo Nome da Empresa.')
               ? 'error'
+              : undefined
+          }
+          help={
+            inputsAlerts('Por favor, preencha o campo Nome da Empresa.')
+              ? '* Por favor, preencha este campo'
               : undefined
           }
         >
@@ -92,6 +99,20 @@ export function EditModal(props: any) {
               'Já existe uma empresa cadastrada com esse CNPJ.',
             ])
               ? 'error'
+              : undefined
+          }
+          help={
+            inputsAlerts([
+              'Por favor, preencha o campo CNPJ.',
+              'Por favor, insira um CNPJ válido.',
+              'Já existe uma empresa cadastrada com esse CNPJ.',
+            ])
+              ? inputsAlerts([
+                  'Por favor, insira um CNPJ válido.',
+                  'Já existe uma empresa cadastrada com esse CNPJ.',
+                ])
+                ? '* Por favor, corrija este campo.'
+                : '* Por favor, preencha este campo.'
               : undefined
           }
           name="cnpj"
@@ -124,6 +145,11 @@ export function EditModal(props: any) {
           validateStatus={
             inputsAlerts('Por favor, selecione os Setores.')
               ? 'error'
+              : undefined
+          }
+          help={
+            inputsAlerts('Por favor, selecione os Setores.')
+              ? '* Por favor, preencha este campo.'
               : undefined
           }
         >
