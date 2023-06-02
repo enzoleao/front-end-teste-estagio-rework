@@ -70,6 +70,11 @@ export function RegisterCompany() {
             name="name"
             label="Nome da Empresa"
             tooltip="Este campo é obrigatório"
+            help={
+              inputsAlerts(['Por favor, preencha o campo Nome da Empresa.'])
+                ? '* Por favor, preencha este campo'
+                : ''
+            }
           >
             <Input
               placeholder="Nome da Empresa"
@@ -97,6 +102,20 @@ export function RegisterCompany() {
             name="cnpj"
             label="CNPJ"
             tooltip="Este campo é obrigatório"
+            help={
+              inputsAlerts([
+                'Por favor, preencha o campo CNPJ.',
+                'Por favor, insira um CNPJ válido.',
+                'Já existe uma empresa cadastrada com esse CNPJ.',
+              ])
+                ? inputsAlerts([
+                    'Por favor, insira um CNPJ válido.',
+                    'Já existe uma empresa cadastrada com esse CNPJ.',
+                  ])
+                  ? '* Por favor, corrija este campo.'
+                  : '* Por favor, preencha este campo.'
+                : ''
+            }
           >
             <InputMask mask="99.999.999/9999-99" maskChar="">
               {/* @ts-ignore: Unreachable code error */}
@@ -128,6 +147,11 @@ export function RegisterCompany() {
             label="Setores"
             tooltip="Este campo é obrigatório"
             name="sectors"
+            help={
+              inputsAlerts(['Por favor, selecione os Setores.'])
+                ? '* Por favor, selecione as opções'
+                : undefined
+            }
           >
             <Select
               suffixIcon={

@@ -246,8 +246,13 @@ export function HomeTable() {
   )
   const filterItems = (
     <div>
-      <p>
-        Ordem alfabetica <Switch checked={orderPages} onChange={orderResults} />
+      <p className="flex items-center justify-center gap-2">
+        Ordem alfabetica{' '}
+        <Switch
+          className={styles.switchCss}
+          checked={orderPages}
+          onChange={orderResults}
+        />
       </p>
     </div>
   )
